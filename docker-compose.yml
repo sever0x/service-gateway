@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+
+  consul:
+    image: bitnami/consul
+    container_name: "ms-consul"
+    ports:
+      - "8501:8500"
+    command: "consul agent -dev -ui -client=0.0.0.0"
+
+networks:
+  default:
+    name: gws-net
+    driver: bridge

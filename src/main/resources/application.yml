@@ -1,0 +1,72 @@
+server:
+  port: 8761
+  error:
+    include-message: always
+    include-binding-errors: always
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:keystore/divanonim.p12
+    key-store-password: ${SSL_PASSWORD}
+    key-alias: ${SSL_KEY_ALIAS}
+    enabled: true
+
+oauth:
+  google:
+    clientId: ${GOOGLE_OAUTH_CLIENT_ID}
+    clientSecret: ${GOOGLE_OAUTH_CLIENT_SECRET}
+    scope: "openid profile email"
+
+spring:
+  application:
+    name: gateway
+  config:
+    import: optional:consul:/
+  cloud:
+    consul:
+      host: localhost
+      port: 8501
+      discovery:
+        health-check-path: /health
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: gateway-oauth-route
+          uri: lb://gateway
+          predicates:
+            - Path=/oauth/**
+        - id: service-songs-route
+          uri: lb://service-songs
+          predicates:
+            - Path=/api/song/**
+          filters:
+            - RewritePath=/api/song/(?<remaining>.*), /api/song/${remaining}
+  r2dbc:
+    url: "r2dbc:h2:mem:///msdb"
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      services:
+        wait-duration-in-open-state: 10s
+        failure-rate-threshold: 60
+        slow-call-duration-threshold:
+          - 2s
+        minimum-number-of-calls: 3
+        permitted-number-of-calls-in-half-open-state: 1
+
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: "*"
