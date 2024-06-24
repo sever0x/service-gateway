@@ -1,5 +1,5 @@
 server:
-  port: 8761
+  port: 9090
   error:
     include-message: always
     include-binding-errors: always
@@ -24,13 +24,10 @@ spring:
   cloud:
     consul:
       host: localhost
-      port: 8501
+      port: 8500
       discovery:
         health-check-path: /health
     gateway:
-      discovery:
-        locator:
-          enabled: true
       routes:
         - id: gateway-oauth-route
           uri: lb://gateway

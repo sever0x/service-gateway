@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -50,14 +49,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 return authCallback(exchange);
             }
         }
-        return null;
+        return chain.filter(exchange);
     }
 
     private Mono<Void> authCallback(ServerWebExchange exchange) {
         String code = exchange.getRequest().getQueryParams().getFirst("code");
         String state = exchange.getRequest().getQueryParams().getFirst("state");
         String redirectUri = buildRedirectUri(exchange.getRequest());
-        return verifyState(Objects.requireNonNull(state), exchange.getRequest())
+        return verifyState(state, exchange.getRequest())
                 .then(googleAuthenticationService.processAuthenticationCallback(code, redirectUri)
                         .doOnNext(userInfo -> log.info("User authenticated: {}", userInfo))
                         .flatMap(sessionService::saveSession)
@@ -66,7 +65,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
     }
 
     private Mono<Void> verifyState(String state, ServerHttpRequest request) {
-        String cookieState = Objects.requireNonNull(request.getCookies().getFirst(COOKIE_AUTH_STATE)).getValue();
+        String cookieState = request.getCookies().getFirst(COOKIE_AUTH_STATE).getValue();
         if (!state.equals(cookieState)) {
             return Mono.error(new IllegalStateException("Invalid state"));
         }
