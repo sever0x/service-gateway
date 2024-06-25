@@ -5,6 +5,7 @@ import com.sever0x.gateway.data.UserSession;
 import com.sever0x.gateway.repository.UserSessionRepository;
 import com.sever0x.gateway.service.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.time.Instant;
 
 import static com.sever0x.gateway.filter.AuthenticationFilter.COOKIE_SESSION_ID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SessionService {
@@ -47,8 +49,8 @@ public class SessionService {
                         .value(session.getId())
                         .path("/")
                         .maxAge(SESSION_DURATION)
-                        .secure(true)
-                        .httpOnly(true)
+//                        .secure(true)
+//                        .httpOnly(true)
                         .build())
         );
     }
