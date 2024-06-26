@@ -7,12 +7,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class CorsConfig {
-
-    private static final List<String> httpMethods = List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS");
 
     private final String googleOriginUrl = "https://accounts.google.com";
 
@@ -23,14 +22,13 @@ public class CorsConfig {
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowCredentials(true);
-        cors.setAllowedMethods(httpMethods);
-        cors.setAllowedOrigins(List.of(frontendOriginUrl, googleOriginUrl));
-        cors.setAllowedHeaders(List.of("*", "Authorization"));
-        cors.setExposedHeaders(List.of("Location"));
+        cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        cors.setAllowedOrigins(Arrays.asList(frontendOriginUrl, googleOriginUrl));
+        cors.setAllowedHeaders(Arrays.asList("*", "Authorization"));
+        cors.setExposedHeaders(Collections.singletonList("Location"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cors);
-
         return new CorsWebFilter(source);
     }
 }
