@@ -3,12 +3,6 @@ server:
   error:
     include-message: always
     include-binding-errors: always
-#  ssl:
-#    key-store-type: PKCS12
-#    key-store: classpath:keystore/divanonim.p12
-#    key-store-password: ${SSL_PASSWORD}
-#    key-alias: ${SSL_KEY_ALIAS}
-#    enabled: true
 
 oauth:
   google:
@@ -19,14 +13,14 @@ oauth:
 spring:
   application:
     name: gateway
-  config:
-    import: optional:consul:/
+#  config:
+#    import: optional:consul:/
   cloud:
-    consul:
-      host: localhost
-      port: 8500
-      discovery:
-        health-check-path: /health
+#    consul:
+#      host: localhost
+#      port: 8500
+#      discovery:
+#        health-check-path: /health
     gateway:
       routes:
         - id: gateway-oauth-route
