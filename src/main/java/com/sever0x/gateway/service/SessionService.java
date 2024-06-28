@@ -6,6 +6,7 @@ import com.sever0x.gateway.repository.UserSessionRepository;
 import com.sever0x.gateway.service.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,9 @@ import static com.sever0x.gateway.filter.AuthenticationFilter.COOKIE_SESSION_ID;
 public class SessionService {
 
     private static final Duration SESSION_DURATION = Duration.ofHours(1);
+
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     private final UserSessionRepository userSessionRepository;
 
@@ -46,6 +50,7 @@ public class SessionService {
     public Mono<Void> addSessionCookie(ServerWebExchange exchange, UserSession session) {
         return Mono.fromRunnable(
                 () -> exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_SESSION_ID)
+                        .domain(frontendUrl)
                         .value(session.getId())
                         .path("/")
                         .maxAge(SESSION_DURATION)
