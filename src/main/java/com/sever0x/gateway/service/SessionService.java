@@ -49,8 +49,8 @@ public class SessionService {
                         .value(session.getId())
                         .path("/")
                         .maxAge(SESSION_DURATION)
-//                        .secure(true)
-//                        .httpOnly(true)
+                        .secure(true)
+                        .httpOnly(true)
                         .build())
         );
     }
