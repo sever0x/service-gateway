@@ -3,6 +3,7 @@ server:
   error:
     include-message: always
     include-binding-errors: always
+  forward-headers-strategy: native
 
 oauth:
   google:
