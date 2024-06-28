@@ -50,7 +50,7 @@ public class SessionService {
     public Mono<Void> addSessionCookie(ServerWebExchange exchange, UserSession session) {
         return Mono.fromRunnable(
                 () -> exchange.getResponse().addCookie(ResponseCookie.from(COOKIE_SESSION_ID)
-                        .domain(frontendUrl)
+                        .domain(frontendUrl.substring(8))
                         .value(session.getId())
                         .path("/")
                         .maxAge(SESSION_DURATION)
