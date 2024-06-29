@@ -23,7 +23,7 @@ public class CorsConfig {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowCredentials(true);
         cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cors.setAllowedOrigins(Arrays.asList(frontendOriginUrl, googleOriginUrl));
+        cors.setAllowedOrigins(Arrays.asList(googleOriginUrl));
         cors.setAllowedHeaders(Arrays.asList("*", "Authorization"));
         cors.setExposedHeaders(Collections.singletonList("Location"));
 
