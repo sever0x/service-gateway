@@ -29,7 +29,7 @@ spring:
           predicates:
             - Path=/oauth/**
         - id: service-songs-route
-          uri: ${SERVICE_SONGS_ROUTE}
+          uri: ${service.songs.url}
           predicates:
             - Path=/api/song/**
           filters:
@@ -54,6 +54,10 @@ resilience4j:
 
 frontend:
   url: ${FRONTEND_URL}
+
+service:
+  songs:
+    url: ${SERVICE_SONGS_ROUTE}
 
 management:
   endpoint:

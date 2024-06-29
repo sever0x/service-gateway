@@ -18,12 +18,15 @@ public class CorsConfig {
     @Value("${frontend.url}")
     private String frontendOriginUrl;
 
+    @Value("${service.songs.url}")
+    private String serviceSongsOriginUrl;
+
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowCredentials(true);
         cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cors.setAllowedOrigins(Arrays.asList(frontendOriginUrl, googleOriginUrl));
+        cors.setAllowedOrigins(Arrays.asList(frontendOriginUrl, googleOriginUrl, serviceSongsOriginUrl));
         cors.setAllowedHeaders(Arrays.asList("*", "Authorization"));
         cors.setExposedHeaders(Collections.singletonList("Location"));
 
