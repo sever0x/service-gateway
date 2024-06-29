@@ -34,6 +34,7 @@ spring:
             - Path=/api/song/**
           filters:
             - RewritePath=/api/song/(?<remaining>.*), /api/song/${remaining}
+            - RemoveRequestHeader=Origin
   r2dbc:
     url: "r2dbc:h2:mem:///msdb"
   sql:
