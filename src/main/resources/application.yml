@@ -58,6 +58,8 @@ frontend:
 service:
   songs:
     url: ${SERVICE_SONGS_ROUTE}
+  load-balancer:
+    url: ${LOAD_BALANCER_ROUTE}
 
 management:
   endpoint:
