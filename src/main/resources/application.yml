@@ -29,7 +29,7 @@ spring:
           predicates:
             - Path=/oauth/**
         - id: service-songs-route
-          uri: lb://service-songs
+          uri: ${SERVICE_SONGS_ROUTE}
           predicates:
             - Path=/api/song/**
           filters:
