@@ -13,8 +13,6 @@ import java.util.Collections;
 @Configuration
 public class CorsConfig {
 
-    private final String googleOriginUrl = "https://accounts.google.com";
-
     @Value("${frontend.url}")
     private String frontendOriginUrl;
 
@@ -23,8 +21,8 @@ public class CorsConfig {
         CorsConfiguration cors = new CorsConfiguration();
         cors.setAllowCredentials(true);
         cors.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        cors.setAllowedOrigins(Arrays.asList(googleOriginUrl));
-        cors.setAllowedHeaders(Arrays.asList("*", "Authorization"));
+        cors.setAllowedOrigins(Collections.singletonList(frontendOriginUrl));
+        cors.setAllowedHeaders(Collections.singletonList("*"));
         cors.setExposedHeaders(Collections.singletonList("Location"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
