@@ -22,7 +22,7 @@ import static com.sever0x.gateway.filter.AuthenticationFilter.COOKIE_SESSION_ID;
 @RequiredArgsConstructor
 public class SessionService {
 
-    private static final Duration SESSION_DURATION = Duration.ofSeconds(30);
+    private static final Duration SESSION_DURATION = Duration.ofHours(1);
 
     private final UserSessionRepository userSessionRepository;
 
