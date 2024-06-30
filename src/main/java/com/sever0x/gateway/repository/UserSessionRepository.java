@@ -3,21 +3,18 @@ package com.sever0x.gateway.repository;
 import com.sever0x.gateway.auth.dto.UserInfo;
 import com.sever0x.gateway.data.UserSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
-
-import static org.springframework.data.relational.core.query.Criteria.where;
-import static org.springframework.data.relational.core.query.Query.query;
 
 @Repository
 @RequiredArgsConstructor
 public class UserSessionRepository {
-
-    private final R2dbcEntityTemplate entityTemplate;
+    private final ReactiveRedisTemplate<String, UserSession> redisTemplate;
 
     public Mono<UserSession> createSession(UserInfo userInfo, Instant expiresAt) {
         UserSession userSession = new UserSession();
@@ -25,10 +22,13 @@ public class UserSessionRepository {
         userSession.setEmail(userInfo.getEmail());
         userSession.setName(userInfo.getName());
         userSession.setExpiresAt(expiresAt);
-        return entityTemplate.insert(userSession);
+
+        Duration ttl = Duration.between(Instant.now(), expiresAt);
+        return redisTemplate.opsForValue().set(userSession.getId(), userSession, ttl)
+                .thenReturn(userSession);
     }
 
     public Mono<UserSession> findById(String id) {
-        return entityTemplate.selectOne(query(where("id").is(id)), UserSession.class);
+        return redisTemplate.opsForValue().get(id);
     }
 }

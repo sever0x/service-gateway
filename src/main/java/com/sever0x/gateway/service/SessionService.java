@@ -6,7 +6,6 @@ import com.sever0x.gateway.repository.UserSessionRepository;
 import com.sever0x.gateway.service.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ import static com.sever0x.gateway.filter.AuthenticationFilter.COOKIE_SESSION_ID;
 @RequiredArgsConstructor
 public class SessionService {
 
-    private static final Duration SESSION_DURATION = Duration.ofHours(1);
+    private static final Duration SESSION_DURATION = Duration.ofSeconds(30);
 
     private final UserSessionRepository userSessionRepository;
 
@@ -33,11 +32,13 @@ public class SessionService {
             return Mono.error(new UnauthorizedException("Session Cookie not found"));
         }
         return userSessionRepository.findById(sessionCookie.getValue())
-                .flatMap(session ->
-                        session.isExpired()
-                                ? Mono.error(new UnauthorizedException("Session expired"))
-                                : Mono.just(session)
-                ).switchIfEmpty(Mono.error(new UnauthorizedException("Session not found")));
+                .flatMap(session -> {
+                    if (session.isExpired()) {
+                        return Mono.error(new UnauthorizedException("Session expired"));
+                    }
+                    return Mono.just(session);
+                })
+                .switchIfEmpty(Mono.error(new UnauthorizedException("Session not found")));
     }
 
     public Mono<UserSession> saveSession(UserInfo userInfo) {

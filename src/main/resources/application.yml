@@ -34,12 +34,16 @@ spring:
             - Path=/api/song/**
           filters:
             - RewritePath=/api/song/(?<remaining>.*), /api/song/${remaining}
-  r2dbc:
-    url: "r2dbc:h2:mem:///msdb"
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
+  data:
+    redis:
+      repositories:
+        enabled: true
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      username: ${REDIS_USERNAME:}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL:false}
 
 resilience4j:
   circuitbreaker:
